@@ -35,11 +35,19 @@ COPY --from=builder /usr/app /usr/share/nginx/html
 # Skopiowanie pliku default.conf do katalogu roboczego
 COPY ./default.conf /etc/nginx/conf.d/default.conf
 
+COPY start.sh /usr/share/nginx/html
+
+# Make the script executable
+RUN chmod +x /usr/share/nginx/html/start.sh
+
 # Ustawienie portu
 EXPOSE 80
 
-# Uruchomienie serwera nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Instalacja node.js
+RUN apt update && apt install -y nodejs
+
+# Uruchomienie serwera nginx i aplikacji
+CMD ["/usr/share/nginx/html/start.sh"]
 
 
 # Sprawdzenie dostępności aplikacji
